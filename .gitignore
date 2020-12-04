@@ -27,3 +27,5 @@ package-lock.json
 dist
 react/node_modules/
 react/dist/
+__pycache__/
+db.sqlite3
