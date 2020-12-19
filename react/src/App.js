@@ -6,11 +6,15 @@ import EmpTable from './components/empTable';
 function App() {
   return (
     <div className="container">
-      <div className='row'>
+      <div className="row mb-5">
           <div className="col-md-12">
-              <EmpTable />
+              <div className="text-center bg-secondary p-lg-3">
+                <h1>Django GraphQL and ReactJS CRUD</h1>
+              </div>
           </div>
       </div>
+  
+      <EmpTable />
     </div>
   );
 }
