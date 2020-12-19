@@ -10,10 +10,11 @@ function EmpTable() {
         client
             .query({
                 query: gql`
-                query GetRates {
-                    rates(currency: "USD") {
-                    currency
-                    }
+                query {
+                  employees {
+                    name
+                    role
+                  }
                 }
                 `
             })
