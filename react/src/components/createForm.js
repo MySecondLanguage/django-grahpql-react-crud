@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import client from "../gqlClient";
-import { gql } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 
 
 
@@ -13,11 +13,26 @@ function CreateForm () {
     setFormData(formData)
   }
 
+  const ADD_EMPLOYEE = gql`
+    mutation {
+      createEmployee(
+        name: "react",
+        role: "designer",
+      ) {
+        id
+        name
+        role
+      }
+    }
+`;
+
+  // const [addEmployee, { data }] = useMutation(ADD_EMPLOYEE);
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    console.log('Submitted')
   }
 
+ 
 
   return (
       <div className="col-md-12 mb-5">
