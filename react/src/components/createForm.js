@@ -26,7 +26,6 @@ function CreateForm () {
     }
 `;
 
-  // let name, role;
   const [addEmployee, { data }] = useMutation(ADD_EMPLOYEE);
 
   const onSubmitHandler = (e) => {

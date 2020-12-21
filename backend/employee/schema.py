@@ -8,12 +8,18 @@ class EmployeeType(DjangoObjectType):
         model = Employee
 
 
+class DeleteEmployee(graphene.Mutation):
+    ok = graphene.Boolean()
 
-class Query(graphene.ObjectType):
-    employees = graphene.List(EmployeeType)
+    class Arguments:
+        id = graphene.ID()
 
-    def resolve_employees(self, info):
-        return Employee.objects.all()
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
+        obj = Employee.objects.get(pk=kwargs["id"])
+        obj.delete()
+        return cls(ok=True)
+
 
 
 
@@ -41,6 +47,13 @@ class CreateEmployee(graphene.Mutation):
 
 class Mutation(graphene.ObjectType):
     create_employee = CreateEmployee.Field()
+    delete_employee = DeleteEmployee.Field()
+
+class Query(graphene.ObjectType):
+    employees = graphene.List(EmployeeType)
+
+    def resolve_employees(self, info):
+        return Employee.objects.all()
 
 schema = graphene.Schema(
     query=Query,
