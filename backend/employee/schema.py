@@ -51,9 +51,14 @@ class Mutation(graphene.ObjectType):
 
 class Query(graphene.ObjectType):
     employees = graphene.List(EmployeeType)
+    
+    employee_by_id = graphene.Field(EmployeeType, id=graphene.String())
 
     def resolve_employees(self, info):
         return Employee.objects.all()
+
+    def resolve_employee_by_id(root, info, id):
+        return Employee.objects.get(pk=id)
 
 schema = graphene.Schema(
     query=Query,

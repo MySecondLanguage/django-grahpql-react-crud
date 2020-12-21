@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from "react";
 import client from "../gqlClient";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 import CreateForm from './createForm';
 
 function EmpTable() {
   const [employees, setEmployee] = useState({ emp: [] });
+  const [status, setStatus] = useState({
+    isEdit: false,
+  });
+
+  const [formData, setFormData] = useState({
+    name: '',
+    role: '',
+  });
+
+  const onChangeHandler = (e) => {
+    formData[e.target.name] = e.target.value
+    setFormData(formData)
+  }
 
   useEffect(() => {
     client
@@ -34,18 +47,42 @@ function EmpTable() {
     }
 `;
 
-    const ADD_EMPLOYEE = gql`
-        mutation createEmployee ($name: String!, $role: String!){
-          createEmployee (name: $name, role: $role){
-            id
-            name
-            role
-          }
+  const ADD_EMPLOYEE = gql`
+      mutation createEmployee ($name: String!, $role: String!){
+        createEmployee (name: $name, role: $role){
+          id
+          name
+          role
         }
-    `;
-  const [addEmployee, { data }] = useMutation(ADD_EMPLOYEE);
+      }
+  `;
 
-const [deleteEmployee, { deleteData }] = useMutation(DELETE_EMPLOYEE);
+  const EDIT_EMPLOYEE = gql`
+      mutation createEmployee ($name: String!, $role: String!){
+        createEmployee (name: $name, role: $role){
+          id
+          name
+          role
+        }
+      }
+  `;
+
+  const GET_EMPLOYEE = gql`
+    query refetch($id: String) {
+      employeeById(id: $id) {
+        id
+        name
+        role
+      }
+    }
+  `;
+
+  const [addEmployee, ] = useMutation(ADD_EMPLOYEE);
+
+  const [editEmployee,] = useMutation(EDIT_EMPLOYEE);
+
+  const [deleteEmployee, ] = useMutation(DELETE_EMPLOYEE);
+  const {refetch} = useQuery(GET_EMPLOYEE)
 
 
   const onDeleteHandler = (id, key) => {
@@ -64,12 +101,32 @@ const [deleteEmployee, { deleteData }] = useMutation(DELETE_EMPLOYEE);
       ).then((response => {
           setEmployee({emp: [...employees.emp, response.data.createEmployee]})
       }))
+  };
+
+
+  const onEditHandler = (formData, empID) => {
+    editEmployee(
+      { variables: formData }
+    ).then((response => {
+        setEmployee({emp: [...employees.emp, response.data.createEmployee]})
+    }))
+  };
+
+
+  const openEditForm = (id) => {
+    setStatus({isEdit: true});
+    refetch({
+      id: id
+    }).then((response) => {
+      setFormData(response.data.employeeById);
+    })
+    
   }
 
   return (
     <div className="row">
      
-        <CreateForm onClickHandler={onCreateHandler} />
+        <CreateForm onCreatekHandler={onCreateHandler} onEditHandler={onEditHandler} isEdit={status.isEdit} onChangeHandler={onChangeHandler} formData={formData} setFormData={setFormData} />
     
       <div className="col-md-12">
         <table className="table text-center">
@@ -87,7 +144,7 @@ const [deleteEmployee, { deleteData }] = useMutation(DELETE_EMPLOYEE);
                 <td scope="col">{employee.role}</td>
                 <td>
                   <button onClick={() => onDeleteHandler(employee.id, key)} className="btn btn-danger mr-1">Delete</button>
-                  <button className="btn btn-info ml-1">Edit</button>
+                  <button onClick={() => openEditForm(employee.id)} className="btn btn-info ml-1">Edit</button>
                 </td>
               </tr>
             ))}
