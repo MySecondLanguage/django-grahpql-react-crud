@@ -6,7 +6,10 @@ import { gql, useMutation } from "@apollo/client";
 
 function CreateForm () {
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: '',
+    role: '',
+  });
 
   const onChangeHandler = (e) => {
     formData[e.target.name] = e.target.value
@@ -14,11 +17,8 @@ function CreateForm () {
   }
 
   const ADD_EMPLOYEE = gql`
-    mutation {
-      createEmployee(
-        name: "react",
-        role: "designer",
-      ) {
+    mutation createEmployee ($name: String!, $role: String!){
+      createEmployee (name: $name, role: $role){
         id
         name
         role
@@ -26,11 +26,18 @@ function CreateForm () {
     }
 `;
 
-  // const [addEmployee, { data }] = useMutation(ADD_EMPLOYEE);
+  // let name, role;
+  const [addEmployee, { data }] = useMutation(ADD_EMPLOYEE);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-  }
+    addEmployee(
+      { variables: formData }
+    ).then((response => {
+      console.log(response.data);
+    }))
+
+  };
 
  
 
