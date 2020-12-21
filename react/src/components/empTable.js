@@ -34,26 +34,42 @@ function EmpTable() {
     }
 `;
 
-const [deleteEmployee, { data }] = useMutation(DELETE_EMPLOYEE);
+    const ADD_EMPLOYEE = gql`
+        mutation createEmployee ($name: String!, $role: String!){
+          createEmployee (name: $name, role: $role){
+            id
+            name
+            role
+          }
+        }
+    `;
+  const [addEmployee, { data }] = useMutation(ADD_EMPLOYEE);
+
+const [deleteEmployee, { deleteData }] = useMutation(DELETE_EMPLOYEE);
 
 
   const onDeleteHandler = (id, key) => {
+    deleteEmployee({
+      variables: {
+        id: id
+      }
+    }).then((response) => {
+      setEmployee({emp: [...employees.emp.filter((empl) => empl.id != id)]})
+    })
+  };
 
-  deleteEmployee({
-    variables: {
-      id: id
-    }
-  }).then((response) => {
-    setEmployee({emp: [...employees.emp.filter((empl) => empl.id != id)]})
-  })
-
-
+  const onCreateHandler = (formData) => {
+      addEmployee(
+        { variables: formData }
+      ).then((response => {
+          setEmployee({emp: [...employees.emp, response.data.createEmployee]})
+      }))
   }
 
   return (
     <div className="row">
      
-        <CreateForm />
+        <CreateForm onClickHandler={onCreateHandler} />
     
       <div className="col-md-12">
         <table className="table text-center">
