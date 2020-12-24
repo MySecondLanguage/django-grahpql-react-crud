@@ -58,17 +58,19 @@ function EmpTable() {
   `;
 
   const EDIT_EMPLOYEE = gql`
-      mutation createEmployee ($name: String!, $role: String!){
-        createEmployee (name: $name, role: $role){
-          id
-          name
-          role
+      mutation editEmp ($id: ID!, $name: String!, $role: String!){
+        updateEmployee(id: $id, name: $name, role: $role) {
+          employee {
+            id
+            name
+            role
+          }
         }
       }
   `;
 
   const GET_EMPLOYEE = gql`
-    query refetch($id: String) {
+    query getEmp($id: String) {
       employeeById(id: $id) {
         id
         name
@@ -104,11 +106,12 @@ function EmpTable() {
   };
 
 
-  const onEditHandler = (formData, empID) => {
+  const onEditHandler = (formData) => {
     editEmployee(
       { variables: formData }
     ).then((response => {
-        setEmployee({emp: [...employees.emp, response.data.createEmployee]})
+        setEmployee({emp: [...employees.emp, response.data.updateEmployee.employee]})
+        console.log(response.data.updateEmployee.employee)
     }))
   };
 
@@ -118,7 +121,11 @@ function EmpTable() {
     refetch({
       id: id
     }).then((response) => {
-      setFormData(response.data.employeeById);
+      setFormData({
+        name: response.data.employeeById.name,
+        role: response.data.employeeById.role,
+        id: response.data.employeeById.id,
+      });
     })
     
   }

@@ -21,6 +21,25 @@ class DeleteEmployee(graphene.Mutation):
         return cls(ok=True)
 
 
+class UpdateEmployee(graphene.Mutation):
+    class Arguments:
+        # The input arguments for this mutation
+        id = graphene.ID()
+        name = graphene.String(required=True)
+        role = graphene.String(required=True)
+       
+
+    # The class attributes define the response of the mutation
+    employee = graphene.Field(EmployeeType)
+
+    @classmethod
+    def mutate(cls, root, info, name, role, id):
+        employee = Employee.objects.get(pk=id)
+        employee.name = name
+        employee.role = role
+        employee.save()
+        # Notice we return an instance of this mutation
+        return UpdateEmployee(employee=employee)
 
 
 class CreateEmployee(graphene.Mutation):
@@ -48,6 +67,7 @@ class CreateEmployee(graphene.Mutation):
 class Mutation(graphene.ObjectType):
     create_employee = CreateEmployee.Field()
     delete_employee = DeleteEmployee.Field()
+    update_employee = UpdateEmployee.Field()
 
 class Query(graphene.ObjectType):
     employees = graphene.List(EmployeeType)

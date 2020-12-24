@@ -4,10 +4,10 @@ import React from "react";
 
 function CreateForm (props) {
 
-  const onSubmitHandler = (e, empID='') => {
+  const onSubmitHandler = (e) => {
     e.preventDefault();
     if (props.isEdit) {
-      props.onEditHandler(props.formData, empID);
+      props.onEditHandler(props.formData);
     } else {
       props.onCreatekHandler(props.formData);
     }
