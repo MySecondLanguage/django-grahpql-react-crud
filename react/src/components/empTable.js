@@ -110,7 +110,8 @@ function EmpTable() {
     editEmployee(
       { variables: formData }
     ).then((response => {
-        setEmployee({emp: [...employees.emp, response.data.updateEmployee.employee]})
+        setEmployee({emp: employees.emp.map((emp) => emp.id === response.data.updateEmployee.employee.id ? response.data.updateEmployee.employee: emp )})
+        // setEmployee({emp: [...employees.emp, response.data.updateEmployee.employee]})
         console.log(response.data.updateEmployee.employee)
     }))
   };
