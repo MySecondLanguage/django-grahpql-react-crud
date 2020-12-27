@@ -77,9 +77,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 GRAPHENE = {
-    'SCHEMA': 'employee.schema.schema'
+    'SCHEMA': 'employee.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
 
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

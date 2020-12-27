@@ -1,5 +1,6 @@
 from graphene_django import DjangoObjectType
 import graphene
+import graphql_jwt
 
 from .models import Employee
 
@@ -68,6 +69,10 @@ class Mutation(graphene.ObjectType):
     create_employee = CreateEmployee.Field()
     delete_employee = DeleteEmployee.Field()
     update_employee = UpdateEmployee.Field()
+
+    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()
 
 class Query(graphene.ObjectType):
     employees = graphene.List(EmployeeType)
