@@ -7,6 +7,48 @@ import { ApolloProvider } from '@apollo/react-hooks';
 
 import client from './gqlClient';
 
+import React, { Component, Suspense } from "react";
+
+import {isLoggedIn } from './auth';
+
+import ViewError from './components/ViewError';
+import Home from './components/home';
+import PrivateHome from './components/privateHome';
+import LoginForm from './components/loginForm';
+
+import {
+  BrowserRouter as Router,withRouter,
+  Route,
+  Switch,
+  Redirect
+} from "react-router-dom";
+
+
+
+const loginUser = {'name': 'jhon doe', 'username': 'doe'};
+
+
+const AuthRoute = ({ component: Component, authUser, ...rest }) => {
+  return (
+      <Route
+          {...rest}
+          render={props =>
+              isLoggedIn() ? (
+                  <Component {...props} />
+              ) : (
+                  <Redirect
+                      to={{
+                        pathname: '/user/login',
+                        state: { from: props.location }
+                      }}
+                  />
+              )
+          }
+      />
+  );
+};
+
+
 
 function App() {
   return (
@@ -20,7 +62,40 @@ function App() {
           </div>
       </div>
 
-        <EmpTable />
+      <Suspense fallback={<div className="loading" />}>
+        <Router>
+          <Switch>
+            <AuthRoute
+              path={"/privatehome"}
+              authUser={loginUser}
+              component={PrivateHome}
+            />
+            {/* <Redirect exact from={`/`} to={`/landing`} /> */}
+            <Route
+              path={"/error"}
+              exact
+              render={props => <ViewError {...props} />}
+            />
+             <Route
+              path={"/emptable"}
+              exact
+              render={props => <EmpTable {...props} />}
+            />
+             <Route
+              path={"/user/login"}
+              exact
+              render={props => <LoginForm {...props} />}
+            />
+            <Route
+              path={"/"}
+              exact
+              render={props => <Home {...props} />}
+            />
+            <Redirect to={"/"} />
+          </Switch>
+        </Router>
+      </Suspense>
+
       </div>
     </ApolloProvider>
   );
