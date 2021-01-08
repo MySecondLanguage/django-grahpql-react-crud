@@ -16,6 +16,8 @@ import Home from './components/home';
 import PrivateHome from './components/privateHome';
 import LoginForm from './components/loginForm';
 
+import HrRouters from '../src/components/hr/App';
+
 import {
   BrowserRouter as Router,withRouter,
   Route,
@@ -80,6 +82,10 @@ function App() {
               path={"/emptable"}
               exact
               render={props => <EmpTable {...props} />}
+            />
+            <Route
+              path={"/hr"}
+              render={props => <HrRouters {...props} />}
             />
              <Route
               path={"/user/login"}
