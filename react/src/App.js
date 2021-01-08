@@ -18,6 +18,8 @@ import LoginForm from './components/loginForm';
 
 import HrRouters from '../src/components/hr/App';
 
+import EmployeeLayout from '../src/components/employee/EmployeeLayout';
+
 import {
   BrowserRouter as Router,withRouter,
   Route,
@@ -55,14 +57,6 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => {
 function App() {
   return (
     <ApolloProvider client={client}>
-      <div className="container border">
-      <div className="row mb-5">
-          <div className="col-md-12">
-              <div className="text-center bg-secondary p-lg-3">
-                <h1>Django GraphQL and ReactJS CRUD</h1>
-              </div>
-          </div>
-      </div>
 
       <Suspense fallback={<div className="loading" />}>
         <Router>
@@ -79,9 +73,8 @@ function App() {
               render={props => <ViewError {...props} />}
             />
              <Route
-              path={"/emptable"}
-              exact
-              render={props => <EmpTable {...props} />}
+              path={"/employee"}
+              render={props => <EmployeeLayout {...props} />}
             />
             <Route
               path={"/hr"}
@@ -102,7 +95,6 @@ function App() {
         </Router>
       </Suspense>
 
-      </div>
     </ApolloProvider>
   );
 }
