@@ -10,7 +10,6 @@ import client from './gqlClient';
 
 import React, { Component, Suspense } from "react";
 
-import {isLoggedIn } from './auth';
 
 import ViewError from './components/ViewError';
 import Home from './components/home';
@@ -18,6 +17,8 @@ import PrivateHome from './components/privateHome';
 import LoginForm from './components/loginForm';
 
 import HrRouters from '../src/components/hr/App';
+
+import {AuthRoute, EmpRoute } from './auth';
 
 import EmployeeLayout from '../src/components/employee/EmployeeLayout';
 
@@ -33,25 +34,7 @@ import {
 const loginUser = {'name': 'jhon doe', 'username': 'doe'};
 
 
-const AuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-      <Route
-          {...rest}
-          render={props =>
-              isLoggedIn() ? (
-                  <Component {...props} />
-              ) : (
-                  <Redirect
-                      to={{
-                        pathname: '/user/login',
-                        state: { from: props.location }
-                      }}
-                  />
-              )
-          }
-      />
-  );
-};
+
 
 
 
@@ -73,9 +56,10 @@ function App() {
               exact
               render={props => <ViewError {...props} />}
             />
-             <Route
+             <EmpRoute
               path={"/employee"}
-              render={props => <EmployeeLayout {...props} />}
+              authUser={loginUser}
+              component={EmployeeLayout}
             />
             <Route
               path={"/hr"}
