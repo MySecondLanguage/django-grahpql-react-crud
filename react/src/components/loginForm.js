@@ -1,20 +1,40 @@
 import React, { useEffect, useState } from "react";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 function LoginForm() {
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: '',
       });
+
+
+    const LOGIN_QL = gql`
+        mutation TokenAuth($email: String!, $password: String!) {
+            tokenAuth(email: $email, password: $password) {
+            token
+            payload
+            refreshExpiresIn
+            }
+        }
+  `;
+
+  const [getToken, ] = useMutation(LOGIN_QL);
 
 
     const onChangeHandler = (e) => {
         formData[e.target.name] = e.target.value
         setFormData(formData)
-      }
+      };
+
+    const login = () => {
+        getToken({variables: formData}).then((token) => {
+            console.log(token)
+        })
+    }
 
     const onSubmitHandler = (e) => {
         e.preventDefault()
-        console.log(formData)
+        login();
     }
 
     return (
@@ -26,11 +46,11 @@ function LoginForm() {
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
                             <input
-                                type="text"
+                                type="email"
                                 className="form-control"
                                 id="username"
                                 aria-describedby="emailHelp"
-                                name="username"
+                                name="email"
                                 onChange={onChangeHandler}
                                 placeholder="Enter username"/>
                         </div>
