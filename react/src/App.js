@@ -3,7 +3,8 @@ import './App.css';
 // import LoginFrom from './components/loginForm';
 import EmpTable from './components/empTable';
 // import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from '@apollo/react-hooks';
+// import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 
 import client from './gqlClient';
 
