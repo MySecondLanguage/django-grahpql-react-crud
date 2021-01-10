@@ -66,7 +66,7 @@ function App() {
               render={props => <HrRouters {...props} />}
             />
              <Route
-              path={"/user/login"}
+              path={"/login"}
               exact
               render={props => <LoginForm {...props} />}
             />

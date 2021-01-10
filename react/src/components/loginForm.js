@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
 
-function LoginForm() {
+function LoginForm(props) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -27,8 +27,12 @@ function LoginForm() {
       };
 
     const login = () => {
-        getToken({variables: formData}).then((token) => {
-            console.log(token)
+        getToken({variables: formData}).then((response) => {
+            localStorage.setItem('persist:emp-token', JSON.stringify(response.data.tokenAuth));
+            var authenticated = JSON.parse(localStorage.getItem('persist:emp-token'));
+            if (authenticated) {
+                props.history.push('/');
+            }
         })
     }
 

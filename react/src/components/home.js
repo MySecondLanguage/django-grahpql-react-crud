@@ -1,8 +1,13 @@
+import { Link } from 'react-router-dom';
 
 function Home() {
     return (
-        <div>
-            <h1>Home Views</h1>
+        <div className="container">
+            <div className="row">
+                <div className="col-md-12">
+                    <Link to="/employee">Employee Board</Link>
+                </div>
+            </div>
         </div>
     )
  }
