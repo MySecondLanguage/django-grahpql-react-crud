@@ -28,7 +28,7 @@ function LoginForm(props) {
 
     const login = () => {
         getToken({variables: formData}).then((response) => {
-            localStorage.setItem('persist:emp-token', JSON.stringify(response.data.tokenAuth));
+            localStorage.setItem('persist:emp-token', JSON.stringify(response.data.tokenAuth.token))
             var authenticated = JSON.parse(localStorage.getItem('persist:emp-token'));
             if (authenticated) {
                 props.history.push('/');
