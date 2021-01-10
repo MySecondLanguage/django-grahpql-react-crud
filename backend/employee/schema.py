@@ -80,7 +80,10 @@ class Query(graphene.ObjectType):
     employee_by_id = graphene.Field(EmployeeType, id=graphene.String())
 
     def resolve_employees(self, info):
-        return Employee.objects.all()
+        if info.context.user.is_authenticated:
+            return Employee.objects.all()
+        else:
+            return Employee.objects.none()
 
     def resolve_employee_by_id(root, info, id):
         return Employee.objects.get(pk=id)
